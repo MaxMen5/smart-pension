@@ -2,14 +2,16 @@ package ru.eltech.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor // Эта аннотация автоматически создаст конструктор со всеми полями
+@AllArgsConstructor
 @ToString
+@DynamicUpdate
 public class User {
 
     @Id
@@ -25,4 +27,7 @@ public class User {
 
     @Column(name = "role_user", nullable = false)
     private String roleUser;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
 }
