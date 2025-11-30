@@ -29,4 +29,9 @@ public class ResidentController {
         Resident savedResident = residentService.createResident(resident);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedResident);
     }
+
+    @PutMapping("/update")
+    public void update(@RequestBody ResidentDto resident) {
+        residentService.updateResident(resident);
+    }
 }

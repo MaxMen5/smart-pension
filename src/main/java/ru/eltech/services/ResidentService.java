@@ -1,5 +1,6 @@
 package ru.eltech.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import ru.eltech.dto.CreateResidentRequest;
@@ -13,6 +14,7 @@ import ru.eltech.entity.Room;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,5 +76,32 @@ public class ResidentService {
         Resident savedResident = residentRepository.save(resident);
         roomService.decrementFreeSpots(room.getId());
         return savedResident;
+    }
+
+    @Transactional
+    public void updateResident(ResidentDto residentDto) {
+        Resident resident = residentRepository.findById(residentDto.idResident())
+                .orElseThrow(() -> new RuntimeException("Постоялец не найден"));
+
+        resident.setLastName(residentDto.lastName());
+        resident.setFirstName(residentDto.firstName());
+        resident.setMiddleName(residentDto.middleName());
+        resident.setBirthDate(residentDto.birthDate());
+        resident.setGender(residentDto.gender());
+        resident.setPassportNumber(residentDto.passportNumber());
+        resident.setPhone(residentDto.phone());
+        resident.setEmail(residentDto.email());
+        resident.setAdmissionDate(residentDto.admissionDate());
+
+        Room room = roomRepository.findByRoomNumber(residentDto.roomNumber())
+                .orElseThrow(() -> new RuntimeException("Комната с номером " + residentDto.roomNumber() + " не найдена"));
+
+        if (!resident.getRoomId().equals(room.getId())) {
+            roomService.incrementFreeSpots(resident.getRoomId());
+            resident.setRoomId(room.getId());
+            roomService.decrementFreeSpots(room.getId());
+        }
+
+        residentRepository.save(resident);
     }
 }

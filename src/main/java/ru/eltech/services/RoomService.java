@@ -28,9 +28,9 @@ public class RoomService {
     public void incrementFreeSpots(Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Комната не найдена"));
-       // if (room.getFreeSpots() > 2) {
-       //     throw new RuntimeException("Комната свободна");
-       // }
+        if (room.getFreeSpots() > 2) {
+            throw new RuntimeException("Комната свободна");
+        }
         room.setFreeSpots(room.getFreeSpots() + 1);
         roomRepository.save(room);
     }
