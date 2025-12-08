@@ -1,20 +1,16 @@
 package ru.eltech.services;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import ru.eltech.dto.CreateResidentRequest;
 import ru.eltech.dto.ResidentDto;
-import ru.eltech.entity.Archive;
 import ru.eltech.entity.Resident;
-import ru.eltech.repositories.ArchiveRepository;
 import ru.eltech.repositories.ResidentRepository;
 import ru.eltech.repositories.RoomRepository;
 import ru.eltech.entity.Room;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,14 +18,12 @@ public class ResidentService {
 
     private final ResidentRepository residentRepository;
     private final RoomRepository roomRepository;
-    private final ArchiveRepository archiveRepository;
     private final RoomService roomService;
 
 
-    public ResidentService(ResidentRepository residentRepository, RoomRepository roomRepository, ArchiveRepository archiveRepository, RoomService roomService) {
+    public ResidentService(ResidentRepository residentRepository, RoomRepository roomRepository, RoomService roomService) {
         this.residentRepository = residentRepository;
         this.roomRepository = roomRepository;
-        this.archiveRepository = archiveRepository;
         this.roomService = roomService;
     }
 

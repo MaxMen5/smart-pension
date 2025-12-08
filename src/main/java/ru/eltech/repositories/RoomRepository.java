@@ -16,4 +16,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     List<String> findFreeRoom(@Param("roomType") String roomType);
 
     Optional<Room> findByRoomNumber(String roomNumber);
+
+    boolean existsByRoomNumber(String roomNumber);
 }

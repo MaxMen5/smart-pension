@@ -7,4 +7,6 @@ import ru.eltech.entity.Resident;
 @Repository
 public interface ResidentRepository extends JpaRepository<Resident, Long> {
 
+    Long countByRoomId(Long roomId);
+
 }
