@@ -1,6 +1,6 @@
 package ru.eltech.dto;
 
-public record LoginRequest(
+public record LoginDto(
         String login,
         String password
 ) {}

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.eltech.dto.CreateUserRequest;
+import ru.eltech.dto.CreateUserDto;
 import ru.eltech.dto.UserDto;
 import ru.eltech.services.UserService;
 
@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UserDto> create(@RequestBody CreateUserRequest userRequest) {
+    public ResponseEntity<UserDto> create(@RequestBody CreateUserDto userRequest) {
         UserDto user = userService.create(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }

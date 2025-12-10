@@ -2,8 +2,8 @@ package ru.eltech.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.eltech.dto.AuthResponse;
-import ru.eltech.dto.LoginRequest;
+import ru.eltech.dto.AuthDto;
+import ru.eltech.dto.LoginDto;
 import ru.eltech.services.AuthService;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody LoginRequest request) {
+    public AuthDto login(@RequestBody LoginDto request) {
         return authService.authenticateUser(request.login(), request.password());
     }
 

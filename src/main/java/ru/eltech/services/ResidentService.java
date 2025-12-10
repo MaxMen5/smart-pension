@@ -2,8 +2,9 @@ package ru.eltech.services;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import ru.eltech.dto.CreateResidentRequest;
+import ru.eltech.dto.CreateResidentDto;
 import ru.eltech.dto.ResidentDto;
+import ru.eltech.dto.ResidentSmallDto;
 import ru.eltech.entity.Resident;
 import ru.eltech.repositories.ResidentRepository;
 import ru.eltech.repositories.RoomRepository;
@@ -51,7 +52,7 @@ public class ResidentService {
     }
 
     @Transactional
-    public Resident createResident(CreateResidentRequest request) {
+    public Resident createResident(CreateResidentDto request) {
         Room room = roomRepository.findByRoomNumber(request.roomNumber())
                 .orElseThrow(() -> new RuntimeException("Комната с номером " + request.roomNumber() + " не найдена"));
 
@@ -97,5 +98,23 @@ public class ResidentService {
         }
 
         residentRepository.save(resident);
+    }
+
+    public List<ResidentSmallDto> getResidentSmall() {
+        List<Resident> residents = residentRepository.findAll();
+
+        Map<Long, String> roomNumbers = roomRepository.findAll().stream()
+                .collect(Collectors.toMap(Room::getId, Room::getRoomNumber));
+
+        return residents.stream()
+                .map(resident -> new ResidentSmallDto(
+                        resident.getIdResident(),
+                        resident.getLastName(),
+                        resident.getFirstName(),
+                        resident.getMiddleName(),
+                        resident.getGender(),
+                        roomNumbers.get(resident.getRoomId())
+                ))
+                .collect(Collectors.toList());
     }
 }

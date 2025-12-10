@@ -2,16 +2,16 @@ package ru.eltech.services;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import ru.eltech.dto.ArchiveResidentRequest;
+import ru.eltech.dto.ArchiveResidentDto;
 import ru.eltech.entity.Archive;
 import ru.eltech.entity.Resident;
 import ru.eltech.entity.Room;
+import ru.eltech.exception.MyException;
 import ru.eltech.repositories.ArchiveRepository;
 import ru.eltech.repositories.ResidentRepository;
 import ru.eltech.repositories.RoomRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ArchiveService {
@@ -33,10 +33,10 @@ public class ArchiveService {
     }
 
     @Transactional
-    public void archive(ArchiveResidentRequest archive) {
+    public void archive(ArchiveResidentDto archive) {
 
         Resident resident = residentRepository.findById(archive.residentId())
-                .orElseThrow(() -> new RuntimeException("Resident not found with id: " + archive.residentId()));
+                .orElseThrow(() -> new MyException("Постоялец не найден"));
 
         Archive archiveEntity = new Archive();
         archiveEntity.setLastName(resident.getLastName());

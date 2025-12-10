@@ -2,7 +2,7 @@ package ru.eltech.dto;
 
 import java.time.LocalDate;
 
-public record CreateResidentRequest(
+public record CreateResidentDto(
         String lastName,
         String firstName,
         String middleName,

@@ -3,6 +3,10 @@ package ru.eltech.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "rooms")
@@ -26,4 +30,9 @@ public class Room {
 
     @Column(name = "free_spots", nullable = false)
     private Integer freeSpots;
+
+    @ManyToMany(mappedBy = "rooms", fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ToString.Exclude
+    private Set<Worker> workers = new HashSet<>();
 }

@@ -5,8 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.eltech.dto.CreateResidentRequest;
+import ru.eltech.dto.CreateResidentDto;
 import ru.eltech.dto.ResidentDto;
+import ru.eltech.dto.ResidentSmallDto;
 import ru.eltech.entity.Resident;
 import ru.eltech.services.ResidentService;
 
@@ -24,8 +25,11 @@ public class ResidentController {
         return residentService.getAllResidents();
     }
 
+    @GetMapping("/find_all_small")
+    public List<ResidentSmallDto> findAllSmall() { return residentService.getResidentSmall(); }
+
     @PostMapping("/create")
-    public ResponseEntity<Resident> create(@RequestBody CreateResidentRequest resident) {
+    public ResponseEntity<Resident> create(@RequestBody CreateResidentDto resident) {
         Resident savedResident = residentService.createResident(resident);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedResident);
     }
