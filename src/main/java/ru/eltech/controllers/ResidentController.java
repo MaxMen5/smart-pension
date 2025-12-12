@@ -1,14 +1,10 @@
 package ru.eltech.controllers;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.eltech.dto.CreateResidentDto;
 import ru.eltech.dto.ResidentDto;
 import ru.eltech.dto.ResidentSmallDto;
-import ru.eltech.entity.Resident;
 import ru.eltech.services.ResidentService;
 
 import java.util.List;
@@ -17,8 +13,8 @@ import java.util.List;
 @RequestMapping("/api/residents")
 public class ResidentController {
 
-    @Autowired
-    private ResidentService residentService;
+    private final ResidentService residentService;
+    ResidentController(ResidentService residentService) { this.residentService = residentService; }
 
     @GetMapping("/find_all")
     public List<ResidentDto> findAll() {
@@ -26,16 +22,19 @@ public class ResidentController {
     }
 
     @GetMapping("/find_all_small")
-    public List<ResidentSmallDto> findAllSmall() { return residentService.getResidentSmall(); }
+    public List<ResidentSmallDto> findAllSmall() {
+        return residentService.getResidentSmall();
+    }
 
     @PostMapping("/create")
-    public ResponseEntity<Resident> create(@RequestBody CreateResidentDto resident) {
-        Resident savedResident = residentService.createResident(resident);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedResident);
+    public ResponseEntity<Void> create(@RequestBody CreateResidentDto resident) {
+        residentService.createResident(resident);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/update")
-    public void update(@RequestBody ResidentDto resident) {
+    public ResponseEntity<Void> update(@RequestBody ResidentDto resident) {
         residentService.updateResident(resident);
+        return ResponseEntity.ok().build();
     }
 }

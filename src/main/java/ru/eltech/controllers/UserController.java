@@ -1,7 +1,5 @@
 package ru.eltech.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.eltech.dto.CreateUserDto;
@@ -14,8 +12,8 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    UserController(UserService userService) { this.userService = userService; }
 
     @GetMapping("/find_all")
     public List<UserDto> findAll() {
@@ -23,13 +21,14 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UserDto> create(@RequestBody CreateUserDto userRequest) {
-        UserDto user = userService.create(userRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    public ResponseEntity<Void> create(@RequestBody CreateUserDto userRequest) {
+        userService.create(userRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/delete")
-    public void delete(@RequestParam Long userId) {
+    public ResponseEntity<Void> delete(@RequestParam Long userId) {
         userService.delete(userId);
+        return ResponseEntity.noContent().build();
     }
 }

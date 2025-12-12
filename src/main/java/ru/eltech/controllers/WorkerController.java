@@ -1,9 +1,8 @@
 package ru.eltech.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.eltech.dto.WorkerFullDto;
-import ru.eltech.dto.WorkerUpdateDto;
+import ru.eltech.dto.WorkerDto;
 import ru.eltech.services.WorkerService;
 
 import java.util.List;
@@ -12,33 +11,22 @@ import java.util.List;
 @RequestMapping("/api/workers")
 public class WorkerController {
 
-    @Autowired
-    private WorkerService workerService;
+    private final WorkerService workerService;
+    WorkerController(WorkerService workerService) { this.workerService = workerService; }
 
     @GetMapping("/find_all")
-    public List<WorkerFullDto> findAll() {
+    public List<WorkerDto> findAll() {
         return workerService.getAllWorkers();
     }
 
-    @GetMapping("/get")
-    public WorkerFullDto get(@RequestParam String login) {
+    @GetMapping("/get_worker")
+    public WorkerDto getWorker(@RequestParam String login) {
         return workerService.getWorker(login);
     }
 
     @PutMapping("/update")
-    public void update(@RequestBody WorkerUpdateDto dto) {
-        workerService.updateWorker(dto);
-    }
-
-    @PutMapping("/{id}/update")
-    public void updateById(@PathVariable Long id, @RequestBody WorkerUpdateDto dto) {
-        WorkerUpdateDto updatedDto = new WorkerUpdateDto(
-                id,
-                dto.login(),
-                dto.shift(),
-                dto.roomNumbers(),
-                dto.workDates()
-        );
-        workerService.updateWorker(updatedDto);
+    public ResponseEntity<Void> update(@RequestBody WorkerDto workerDto) {
+        workerService.updateWorker(workerDto);
+        return ResponseEntity.ok().build();
     }
 }

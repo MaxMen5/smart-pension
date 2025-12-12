@@ -41,7 +41,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto create(CreateUserDto userRequest) {
+    public void create(CreateUserDto userRequest) {
 
         if (userRepository.existsByLogin(userRequest.login())) {
             throw new MyException("Пользователь с логином " + userRequest.login() + " уже существует");
@@ -65,8 +65,6 @@ public class UserService {
 
             workerRepository.save(worker);
         }
-
-        return new UserDto(user.getIdUser(), user.getLogin(), user.getRoleUser());
     }
 
     @Transactional

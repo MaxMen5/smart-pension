@@ -2,8 +2,7 @@ package ru.eltech.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.eltech.dto.WorkerFullDto;
-import ru.eltech.dto.WorkerUpdateDto;
+import ru.eltech.dto.WorkerDto;
 import ru.eltech.entity.Worker;
 import ru.eltech.entity.WorkerSchedule;
 import ru.eltech.entity.Room;
@@ -33,25 +32,44 @@ public class WorkerService {
     }
 
     // Получить всех работников с комнатами и графиком
-    public List<WorkerFullDto> getAllWorkers() {
+    public List<WorkerDto> getAllWorkers() {
         List<Worker> workers = workerRepository.findAllWithRoomsAndSchedules();
 
         return workers.stream()
-                .map(WorkerFullDto::fromEntity)
+                .map(this::fromEntity)
                 .collect(Collectors.toList());
     }
 
     // Получить одного работника с комнатами и графиком
-    public WorkerFullDto getWorker(String login) {
+    public WorkerDto getWorker(String login) {
         Worker worker = workerRepository.findByLoginWithRoomsAndSchedules(login)
                 .orElseThrow(() -> new RuntimeException("Сотрудник не найден: " + login));
 
-        return WorkerFullDto.fromEntity(worker);
+        return fromEntity(worker);
+    }
+
+    private WorkerDto fromEntity(Worker worker) {
+        Set<String> roomNumbers = worker.getRooms().stream()
+                .map(Room::getRoomNumber)
+                .collect(Collectors.toSet());
+
+        List<LocalDate> workDates = worker.getSchedules().stream()
+                .map(WorkerSchedule::getWorkDate)
+                .sorted()
+                .collect(Collectors.toList());
+
+        return new WorkerDto(
+                worker.getId(),
+                worker.getLogin(),
+                worker.getShift(),
+                roomNumbers,
+                workDates
+        );
     }
 
     // ОБНОВИТЬ ВСЕ: комнаты и график
     @Transactional
-    public void updateWorker(WorkerUpdateDto dto) {
+    public void updateWorker(WorkerDto dto) {
         // 1. Находим работника
         Worker worker = workerRepository.findById(dto.id())
                 .orElseThrow(() -> new RuntimeException("Сотрудник не найден с id: " + dto.id()));

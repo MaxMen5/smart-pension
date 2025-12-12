@@ -27,14 +27,12 @@ public class Worker {
     private String login;
 
     @Column(name = "shift", nullable = false)
-    private String shift = "day"; // значения: "day", "night", "evening", "flexible"
+    private String shift = "day";
 
-    // Связь с графиком работы
     @OneToMany(mappedBy = "worker", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<WorkerSchedule> schedules = new HashSet<>();
 
-    // Связь с комнатами
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "worker_rooms",

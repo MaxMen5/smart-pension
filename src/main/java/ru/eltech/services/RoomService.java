@@ -20,26 +20,6 @@ public class RoomService {
         this.residentRepository = residentRepository;
     }
 
-    public void decrementFreeSpots(Long roomId) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RuntimeException("Комната не найдена"));
-        if (room.getFreeSpots() <= 0) {
-            throw new RuntimeException("В комнате нет свободных мест");
-        }
-        room.setFreeSpots(room.getFreeSpots() - 1);
-        roomRepository.save(room);
-    }
-
-    public void incrementFreeSpots(Long roomId) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RuntimeException("Комната не найдена"));
-        if (room.getFreeSpots() > 2) {
-            throw new RuntimeException("Комната свободна");
-        }
-        room.setFreeSpots(room.getFreeSpots() + 1);
-        roomRepository.save(room);
-    }
-
     public List<String> getFreeSpotsByGender(String gender) {
         return roomRepository.findFreeRoom(gender);
     }
@@ -54,7 +34,6 @@ public class RoomService {
     }
 
     public void createRoom(RoomDto roomDto) {
-
         if (roomRepository.existsByRoomNumber(roomDto.roomNumber())) {
             throw new MyException("Комната с номером " + roomDto.roomNumber() + " уже существует");
         }

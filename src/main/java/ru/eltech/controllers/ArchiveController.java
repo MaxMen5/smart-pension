@@ -13,7 +13,6 @@ import java.util.List;
 public class ArchiveController {
 
     private final ArchiveService archiveService;
-
     public ArchiveController(ArchiveService archiveService) { this.archiveService = archiveService; }
 
     @GetMapping("/find_all")
@@ -21,7 +20,7 @@ public class ArchiveController {
         return archiveService.getAllArchive();
     }
 
-    @PostMapping("/archive")
+    @PostMapping("/remove_resident")
     public ResponseEntity<Void> archive(@RequestBody ArchiveResidentDto archiveResidentDto) {
         archiveService.archive(archiveResidentDto);
         return ResponseEntity.ok().build();

@@ -19,25 +19,35 @@ public class ArchiveService {
     private final ArchiveRepository archiveRepository;
     private final ResidentRepository residentRepository;
     private final RoomRepository roomRepository;
-    private final RoomService roomService;
 
-    public ArchiveService(ArchiveRepository archiveRepository, ResidentRepository residentRepository, RoomRepository roomRepository, RoomService roomService) {
+    public ArchiveService(ArchiveRepository archiveRepository, ResidentRepository residentRepository, RoomRepository roomRepository) {
         this.archiveRepository = archiveRepository;
         this.residentRepository = residentRepository;
         this.roomRepository = roomRepository;
-        this.roomService = roomService;
     }
 
-    public List<Archive> getAllArchive() {
-        return archiveRepository.findAll();
-    }
+    public List<Archive> getAllArchive() { return archiveRepository.findAll(); }
 
     @Transactional
     public void archive(ArchiveResidentDto archive) {
 
         Resident resident = residentRepository.findById(archive.residentId())
-                .orElseThrow(() -> new MyException("Постоялец не найден"));
+                .orElseThrow(() -> new MyException("Постоялец не найден!"));
 
+        Room room = roomRepository.findById(resident.getRoomId())
+                .orElseThrow(() -> new MyException("Комната не найдена!"));
+
+        String roomNumber = room.getRoomNumber();
+        Archive archiveEntity = getArchive(archive, resident, roomNumber);
+
+        archiveRepository.save(archiveEntity);
+        residentRepository.delete(resident);
+        room.incrementFreeSpots();
+        roomRepository.save(room);
+    }
+
+
+    private static Archive getArchive(ArchiveResidentDto archive, Resident resident, String roomNumber) {
         Archive archiveEntity = new Archive();
         archiveEntity.setLastName(resident.getLastName());
         archiveEntity.setFirstName(resident.getFirstName());
@@ -48,17 +58,9 @@ public class ArchiveService {
         archiveEntity.setPhone(resident.getPhone());
         archiveEntity.setEmail(resident.getEmail());
         archiveEntity.setAdmissionDate(resident.getAdmissionDate());
-
-        String roomNumber = roomRepository.findById(resident.getRoomId())
-                .map(Room::getRoomNumber)
-                .orElse("Unknown");
-
         archiveEntity.setRoomNumber(roomNumber);
         archiveEntity.setArchiveDate(archive.archiveDate());
         archiveEntity.setArchiveReason(archive.archiveReason());
-
-        archiveRepository.save(archiveEntity);
-        residentRepository.delete(resident);
-        roomService.incrementFreeSpots(resident.getRoomId());
+        return archiveEntity;
     }
 }

@@ -12,5 +12,5 @@ public record CreateResidentDto(
         String phone,
         String email,
         LocalDate admissionDate,
-        String roomNumber  // принимаем номер комнаты вместо ID
+        String roomNumber
 ) {}
