@@ -19,13 +19,13 @@ public interface ResidentRepository extends JpaRepository<Resident, Long> {
             "r.admissionDate, room.roomNumber " +
             "FROM Resident r " +
             "LEFT JOIN Room room ON r.roomId = room.id")
-    List<ResidentDto> findAllWithRoomNumber();
+    List<Object[]> findAllWithRoomNumber();
 
     @Query("SELECT r.idResident as idResident, r.lastName as lastName, " +
             "r.firstName as firstName, r.middleName as middleName, " +
             "r.gender as gender, room.roomNumber as roomNumber " +
             "FROM Resident r " +
             "LEFT JOIN Room room ON r.roomId = room.id")
-    List<ResidentSmallDto> findAllSmallDto();
+    List<Object[]> findAllSmallDto();
 
 }

@@ -11,7 +11,9 @@ import ru.eltech.repositories.ResidentRepository;
 import ru.eltech.repositories.RoomRepository;
 import ru.eltech.entity.Room;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ResidentService {
@@ -22,14 +24,6 @@ public class ResidentService {
     public ResidentService(ResidentRepository residentRepository, RoomRepository roomRepository) {
         this.residentRepository = residentRepository;
         this.roomRepository = roomRepository;
-    }
-
-    public List<ResidentDto> getAllResidents() {
-        return residentRepository.findAllWithRoomNumber();
-    }
-
-    public List<ResidentSmallDto> getResidentSmall() {
-        return residentRepository.findAllSmallDto();
     }
 
     @Transactional
@@ -79,6 +73,37 @@ public class ResidentService {
         resident.setAdmissionDate(dto.admissionDate());
         resident.setRoomId(room.getId());
         return resident;
+    }
+
+    public List<ResidentSmallDto> getResidentSmall() {
+        return residentRepository.findAllSmallDto().stream()
+                .map(obj -> new ResidentSmallDto(
+                        (Long) obj[0],
+                        (String) obj[1],
+                        (String) obj[2],
+                        (String) obj[3],
+                        (String) obj[4],
+                        (String) obj[5]
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public List<ResidentDto> getAllResidents() {
+        return residentRepository.findAllWithRoomNumber().stream()
+                .map(obj -> new ResidentDto(
+                        (Long) obj[0],
+                        (String) obj[1],
+                        (String) obj[2],
+                        (String) obj[3],
+                        (LocalDate) obj[4],
+                        (String) obj[5],
+                        (String) obj[6],
+                        (String) obj[7],
+                        (String) obj[8],
+                        (LocalDate) obj[9],
+                        (String) obj[10]
+                ))
+                .collect(Collectors.toList());
     }
 
     private void updateEntityFromDto(Resident resident, ResidentDto dto) {
