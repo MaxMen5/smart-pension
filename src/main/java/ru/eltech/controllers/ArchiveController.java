@@ -1,9 +1,8 @@
 package ru.eltech.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.eltech.dto.ArchiveResidentRequest;
+import ru.eltech.dto.ArchiveResidentDto;
 import ru.eltech.entity.Archive;
 import ru.eltech.services.ArchiveService;
 
@@ -13,17 +12,17 @@ import java.util.List;
 @RequestMapping("/api/archive")
 public class ArchiveController {
 
-    @Autowired
-    private ArchiveService archiveService;
+    private final ArchiveService archiveService;
+    public ArchiveController(ArchiveService archiveService) { this.archiveService = archiveService; }
 
     @GetMapping("/find_all")
     public List<Archive> findAll() {
         return archiveService.getAllArchive();
     }
 
-    @PostMapping("/archive")
-    public ResponseEntity<Void> archive(@RequestBody ArchiveResidentRequest archive) {
-        archiveService.archive(archive);
+    @PostMapping("/remove_resident")
+    public ResponseEntity<Void> archive(@RequestBody ArchiveResidentDto archiveResidentDto) {
+        archiveService.archive(archiveResidentDto);
         return ResponseEntity.ok().build();
     }
 }

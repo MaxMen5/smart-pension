@@ -2,7 +2,7 @@ package ru.eltech.dto;
 
 import java.time.LocalDate;
 
-public record CreateResidentRequest(
+public record CreateResidentDto(
         String lastName,
         String firstName,
         String middleName,
@@ -12,5 +12,5 @@ public record CreateResidentRequest(
         String phone,
         String email,
         LocalDate admissionDate,
-        String roomNumber  // принимаем номер комнаты вместо ID
+        String roomNumber
 ) {}

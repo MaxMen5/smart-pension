@@ -3,6 +3,11 @@ package ru.eltech.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import ru.eltech.exception.MyException;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "rooms")
@@ -26,4 +31,25 @@ public class Room {
 
     @Column(name = "free_spots", nullable = false)
     private Integer freeSpots;
+
+    @ManyToMany(mappedBy = "rooms", fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ToString.Exclude
+    private Set<Worker> workers = new HashSet<>();
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ToString.Exclude
+    private Set<Task> tasks = new HashSet<>();
+
+
+    public void decrementFreeSpots() {
+        if (this.freeSpots <= 0) throw new MyException("В комнате нет свободных мест");
+        this.freeSpots--;
+    }
+
+    public void incrementFreeSpots() {
+        if (this.freeSpots >= 3) throw new MyException("В комнате и так все места свободны");
+        this.freeSpots++;
+    }
 }

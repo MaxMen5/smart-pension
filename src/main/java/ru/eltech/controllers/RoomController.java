@@ -1,7 +1,5 @@
 package ru.eltech.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.eltech.dto.RoomDto;
@@ -14,8 +12,8 @@ import java.util.List;
 @RequestMapping("/api/rooms")
 public class RoomController {
 
-    @Autowired
-    private RoomService roomService;
+    private final RoomService roomService;
+    RoomController(RoomService roomService) { this.roomService = roomService; }
 
     @GetMapping("/find_free_rooms")
     public List<String> findFreeRooms(@RequestParam String gender) {
@@ -23,8 +21,9 @@ public class RoomController {
     }
 
     @DeleteMapping("/delete")
-    public void deleteRoom(@RequestParam Long roomId) {
+    public ResponseEntity<Void> deleteRoom(@RequestParam Long roomId) {
         roomService.deleteRoom(roomId);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/find_all")
@@ -33,7 +32,8 @@ public class RoomController {
     }
 
     @PostMapping("/create")
-    public void create(@RequestBody RoomDto roomDto) {
+    public ResponseEntity<Void> create(@RequestBody RoomDto roomDto) {
         roomService.createRoom(roomDto);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -3,7 +3,7 @@ package ru.eltech.services;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.eltech.dto.AuthResponse;
+import ru.eltech.dto.AuthDto;
 import ru.eltech.repositories.UserRepository;
 import ru.eltech.entity.User;
 import ru.eltech.security.JwtUtil;
@@ -26,17 +26,17 @@ public class AuthService {
     }
 
     @Transactional
-    public AuthResponse authenticateUser(String login, String password) {
+    public AuthDto authenticateUser(String login, String password) {
         Optional<User> userOptional = userRepository.findByLogin(login);
 
         if (userOptional.isEmpty()) {
-            return new AuthResponse(false, "Пользователь не найден", null, null, null);
+            return new AuthDto(false, "Пользователь не найден", null, null, null);
         }
 
         User user = userOptional.get();
 
         if (!passwordEncoder.matches(password, user.getPassUser())) {
-            return new AuthResponse(false, "Неверный пароль", null, null, null);
+            return new AuthDto(false, "Неверный пароль", null, null, null);
         }
 
         user.setIsActive(true);
@@ -44,7 +44,7 @@ public class AuthService {
 
         String token = jwtUtil.generateToken(login);
 
-        return new AuthResponse(true, "Авторизация успешна",
+        return new AuthDto(true, "Авторизация успешна",
                 user.getRoleUser(), user.getLogin(), token);
     }
 
