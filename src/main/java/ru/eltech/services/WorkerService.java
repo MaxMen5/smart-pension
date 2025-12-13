@@ -11,6 +11,7 @@ import ru.eltech.repositories.RoomRepository;
 import ru.eltech.repositories.WorkerScheduleRepository;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,7 +52,8 @@ public class WorkerService {
     private WorkerDto fromEntity(Worker worker) {
         Set<String> roomNumbers = worker.getRooms().stream()
                 .map(Room::getRoomNumber)
-                .collect(Collectors.toSet());
+                .sorted()
+                .collect(Collectors.toCollection(LinkedHashSet::new));
 
         List<LocalDate> workDates = worker.getSchedules().stream()
                 .map(WorkerSchedule::getWorkDate)

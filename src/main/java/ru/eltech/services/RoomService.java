@@ -25,7 +25,7 @@ public class RoomService {
     }
 
     public List<Room> findAll() {
-        return roomRepository.findAll();
+        return roomRepository.findAllByOrderByRoomNumberAsc();
     }
 
     public void deleteRoom(Long roomId) {

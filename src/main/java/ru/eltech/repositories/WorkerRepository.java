@@ -16,7 +16,8 @@ public interface WorkerRepository extends JpaRepository<Worker, Long> {
 
     @Query("SELECT DISTINCT w FROM Worker w " +
             "LEFT JOIN FETCH w.rooms " +
-            "LEFT JOIN FETCH w.schedules")
+            "LEFT JOIN FETCH w.schedules " +
+            "ORDER BY w.login")
     List<Worker> findAllWithRoomsAndSchedules();
 
     @Query("SELECT DISTINCT w FROM Worker w " +
