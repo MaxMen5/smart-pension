@@ -170,4 +170,145 @@ public class TaskService {
         // Возвращаем DTO
         return convertTaskToDTO(savedTask);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Transactional(readOnly = true)
+    public DailyRoomTasksDto getWorkerTasks(String login) {
+        // Проверяем, что сотрудник существует
+        Worker worker = workerRepository.findByLogin(login)
+                .orElseThrow(() -> new MyException("Сотрудник не найден"));
+
+        LocalDate today = LocalDate.now();
+
+        // Вариант A: Если у Room есть связь с Worker
+        List<Room> workerRooms = roomRepository.findByWorkersId(worker.getId());
+
+        // 2. Получаем задачи для этих комнат на сегодня
+        Map<Long, List<Task>> tasksByRoom = taskRepository.findByTaskDate(today).stream()
+                .filter(task -> workerRooms.stream()
+                        .anyMatch(room -> room.getId().equals(task.getRoom().getId())))
+                .collect(Collectors.groupingBy(task -> task.getRoom().getId()));
+
+        // 3. Формируем DTO для каждой комнаты
+        List<RoomTasksDto> roomDTOs = workerRooms.stream()
+                .map(room -> {
+                    List<Task> tasks = tasksByRoom.get(room.getId());
+                    return convertWorkerRoomToDTO(room, tasks, worker);
+                })
+                .filter(roomDto -> !roomDto.tasks().isEmpty()) // Фильтруем комнаты без задач
+                .collect(Collectors.toList());
+
+        return new DailyRoomTasksDto(today, roomDTOs);
+    }
+
+    private RoomTasksDto convertWorkerRoomToDTO(Room room, List<Task> tasks, Worker worker) {
+        List<TaskStatusDto> taskDTOs;
+        int totalTasks;
+        int completedTasks;
+
+        if (tasks != null && !tasks.isEmpty()) {
+            taskDTOs = tasks.stream()
+                    .map(this::convertTaskToDTO)
+                    .collect(Collectors.toList());
+            totalTasks = tasks.size();
+            completedTasks = (int) tasks.stream()
+                    .filter(Task::getIsCompleted)
+                    .count();
+        } else {
+            taskDTOs = Collections.emptyList();
+            totalTasks = 0;
+            completedTasks = 0;
+        }
+
+        // Для сиделки показываем только ее саму как ответственную
+        List<WorkerInRoomDto> workersInRoom = Collections.singletonList(
+                new WorkerInRoomDto(worker.getId(), worker.getLogin(), worker.getShift())
+        );
+
+        return new RoomTasksDto(
+                room.getId(),
+                room.getRoomNumber(),
+                room.getRoomType(),
+                room.getFreeSpots(),
+                workersInRoom,
+                taskDTOs,
+                completedTasks,
+                totalTasks
+        );
+    }
+
+
+
+
+
+
+
+
+
+    @Transactional
+    public TaskStatusDto toggleTaskCompletion(Long taskId, CompleteTaskDto request) {
+        // Находим задачу
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new MyException("Задача не найдена"));
+
+        // Проверяем сотрудника
+        Worker worker = workerRepository.findByLogin(request.login())
+                .orElseThrow(() -> new MyException("Сотрудник не найден"));
+
+        // Проверяем, что задача на сегодня
+        LocalDate today = LocalDate.now();
+        if (!task.getTaskDate().equals(today)) {
+            throw new MyException("Можно отмечать только задачи на сегодня");
+        }
+
+        // Проверяем, работает ли сотрудник сегодня
+        boolean isWorkingToday = workerScheduleRepository.existsByWorkerIdAndWorkDate(worker.getId(), today);
+        if (!isWorkingToday) {
+            throw new MyException("Вы не работаете сегодня");
+        }
+
+        // Проверяем, закреплен ли сотрудник за комнатой
+        boolean isAssignedToRoom = task.getRoom().getWorkers().stream()
+                .anyMatch(w -> w.getId().equals(worker.getId()));
+        if (!isAssignedToRoom) {
+            throw new MyException("Вы не закреплены за этой комнатой");
+        }
+
+        // Обновляем статус задачи
+        if (request.isCompleted() != null) {
+            // Если передали конкретный статус
+            task.setIsCompleted(request.isCompleted());
+            if (request.isCompleted()) {
+                task.setCompletedByWorkerId(worker.getId());
+            } else {
+                task.setCompletedByWorkerId(null);
+            }
+        } else {
+            // Или переключаем текущий статус
+            task.setIsCompleted(!task.getIsCompleted());
+            if (task.getIsCompleted()) {
+                task.setCompletedByWorkerId(worker.getId());
+            } else {
+                task.setCompletedByWorkerId(null);
+            }
+        }
+
+        // Сохраняем изменения
+        Task updatedTask = taskRepository.save(task);
+
+        // Возвращаем обновленную задачу
+        return convertTaskToDTO(updatedTask);
+    }
 }

@@ -20,4 +20,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     boolean existsByRoomNumber(String roomNumber);
 
     List<Room> findAllByOrderByRoomNumberAsc();
+
+    @Query("SELECT DISTINCT r FROM Room r JOIN r.workers w WHERE w.id = :workerId")
+    List<Room> findByWorkersId(@Param("workerId") Long workerId);
 }
