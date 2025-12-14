@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.eltech.dto.CompleteTaskDto;
 import ru.eltech.dto.CreateTaskDto;
 import ru.eltech.dto.DailyRoomTasksDto;
 import ru.eltech.dto.TaskStatusDto;
@@ -39,5 +40,19 @@ public class TaskController {
     public ResponseEntity<TaskStatusDto> createTask(@RequestBody CreateTaskDto request) {
         TaskStatusDto createdTask = taskService.createTask(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+    }
+
+    @GetMapping("/worker/find_all_tasks")
+    public ResponseEntity<DailyRoomTasksDto> getWorkerTasks(@RequestParam String login) {
+        DailyRoomTasksDto workerTasks = taskService.getWorkerTasks(login);
+        return ResponseEntity.ok(workerTasks);
+    }
+
+    @PutMapping("/complete/{taskId}")
+    public ResponseEntity<TaskStatusDto> completeTask(
+            @PathVariable Long taskId,
+            @RequestBody CompleteTaskDto request) {
+        TaskStatusDto updatedTask = taskService.toggleTaskCompletion(taskId, request);
+        return ResponseEntity.ok(updatedTask);
     }
 }

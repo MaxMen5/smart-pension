@@ -25,7 +25,6 @@ public interface WorkerScheduleRepository extends JpaRepository<WorkerSchedule, 
     @Query("SELECT ws.worker FROM WorkerSchedule ws WHERE ws.workDate = :date")
     List<Worker> findWorkersByWorkDate(@Param("date") LocalDate date);
 
-    // Найти расписание сотрудника на дату
-    WorkerSchedule findByWorkerAndWorkDate(Worker worker, LocalDate date);
+    boolean existsByWorkerIdAndWorkDate(Long workerId, LocalDate workDate);
 
 }
