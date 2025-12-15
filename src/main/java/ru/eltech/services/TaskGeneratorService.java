@@ -1,5 +1,6 @@
 package ru.eltech.services;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,40 +23,54 @@ public class TaskGeneratorService {
     private final RoomRepository roomRepository;
     private final TaskRepository taskRepository;
 
+    @PostConstruct  // Выполняется при запуске приложения
     @Transactional
-    public void ensureTasksOnStartup() {
-        log.info("Гарантируем задачи на неделю вперед...");
+    public void init() {
+        ensureTasksForWeekAhead();
+    }
+
+    @Scheduled(cron = "0 1 0 * * *")  // Каждый день в 00:01
+    @Transactional
+    public void dailyTasksGeneration() {
+        ensureTasksForWeekAhead();
+    }
+
+    @Transactional
+    public void ensureTasksForWeekAhead() {
+        log.info("Обеспечиваем задачи на неделю вперед...");
 
         LocalDate today = LocalDate.now();
+        LocalDate endDate = today.plusDays(tasksConfig.getDaysAhead());
 
-        for (int i = 0; i <= tasksConfig.getDaysAhead(); i++) {
-            LocalDate date = today.plusDays(i);
-
-            if (taskRepository.countByTaskDate(date) == 0) {
-                log.info("Создаем задачи на: {}", date);
-                generateTasksForDate(date);
-            }
+        // Проходим по всем дням от сегодня до endDate
+        for (LocalDate date = today; !date.isAfter(endDate); date = date.plusDays(1)) {
+            ensureTasksForDate(date);
         }
     }
 
-    @Scheduled(cron = "0 1 0 * * *")
-    @Transactional
-    public void nightlyGeneration() {
-        log.info("Ночная генерация...");
-        generateTasksForDate(LocalDate.now().plusDays(1));
+    private void ensureTasksForDate(LocalDate date) {
+        // Проверяем, есть ли хоть одна задача на эту дату
+        if (taskRepository.countByTaskDate(date) != 0) {
+            log.debug("Задачи на {} уже существуют", date);
+            return;
+        }
+
+        log.info("Создаем задачи на: {}", date);
+        generateTasksForDate(date);
     }
 
-    @Transactional
     public void generateTasksForDate(LocalDate date) {
         List<Room> allRooms = roomRepository.findAll();
         List<TasksConfig.TaskTemplate> templates = tasksConfig.getTemplates();
 
-        // Для каждой комнаты создаем ВСЕ задачи из шаблонов
         for (Room room : allRooms) {
             for (TasksConfig.TaskTemplate template : templates) {
                 createTask(template, room, date);
             }
         }
+
+        log.info("Создано {} задач на {}",
+                allRooms.size() * templates.size(), date);
     }
 
     private void createTask(TasksConfig.TaskTemplate template,

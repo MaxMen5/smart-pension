@@ -192,6 +192,10 @@ public class TaskService {
 
         LocalDate today = LocalDate.now();
 
+        // Проверяем, работает ли сотрудник сегодня
+        boolean isWorkingToday = workerScheduleRepository.existsByWorkerIdAndWorkDate(worker.getId(), today);
+        if (!isWorkingToday) throw new MyException("Вы не работаете сегодня");
+
         // Вариант A: Если у Room есть связь с Worker
         List<Room> workerRooms = roomRepository.findByWorkersId(worker.getId());
 
