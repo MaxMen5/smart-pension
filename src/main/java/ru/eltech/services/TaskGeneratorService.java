@@ -63,6 +63,16 @@ public class TaskGeneratorService {
         List<Room> allRooms = roomRepository.findAll();
         List<TasksConfig.TaskTemplate> templates = tasksConfig.getTemplates();
 
+        if (templates == null || templates.isEmpty()) {
+            log.warn("No task templates configured. Skipping task generation for date: {}", date);
+            return;
+        }
+
+        if (allRooms == null || allRooms.isEmpty()) {
+            log.warn("No rooms found. Skipping task generation for date: {}", date);
+            return;
+        }
+
         for (Room room : allRooms) {
             for (TasksConfig.TaskTemplate template : templates) {
                 createTask(template, room, date);
