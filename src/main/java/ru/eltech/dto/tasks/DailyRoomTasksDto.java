@@ -1,4 +1,4 @@
-package ru.eltech.dto;
+package ru.eltech.dto.tasks;
 
 import java.time.LocalDate;
 import java.util.List;

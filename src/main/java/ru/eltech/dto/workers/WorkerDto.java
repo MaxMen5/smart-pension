@@ -1,4 +1,4 @@
-package ru.eltech.dto;
+package ru.eltech.dto.workers;
 
 import java.time.LocalDate;
 import java.util.Set;

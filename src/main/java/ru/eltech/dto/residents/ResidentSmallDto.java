@@ -1,4 +1,4 @@
-package ru.eltech.dto;
+package ru.eltech.dto.residents;
 
 public record ResidentSmallDto(
         Long idResident,

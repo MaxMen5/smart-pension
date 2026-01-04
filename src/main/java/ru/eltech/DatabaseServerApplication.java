@@ -2,10 +2,9 @@ package ru.eltech;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 
-@SpringBootApplication
-@EnableScheduling
+@SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
 public class DatabaseServerApplication {
 
     public static void main(String[] args) {

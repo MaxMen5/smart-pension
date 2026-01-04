@@ -1,7 +1,7 @@
 package ru.eltech.services;
 
 import org.springframework.stereotype.Service;
-import ru.eltech.dto.RoomDto;
+import ru.eltech.dto.rooms.RoomDto;
 import ru.eltech.entity.Room;
 import ru.eltech.exception.MyException;
 import ru.eltech.repositories.ResidentRepository;

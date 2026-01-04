@@ -1,10 +1,9 @@
-package ru.eltech.handlers;
+package ru.eltech.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import ru.eltech.dto.ErrorDto;
-import ru.eltech.exception.MyException;
+import ru.eltech.dto.auth.ErrorDto;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

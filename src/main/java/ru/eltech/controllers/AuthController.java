@@ -2,8 +2,8 @@ package ru.eltech.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.eltech.dto.AuthDto;
-import ru.eltech.dto.LoginDto;
+import ru.eltech.dto.auth.AuthDto;
+import ru.eltech.dto.auth.LoginDto;
 import ru.eltech.services.AuthService;
 
 @RestController
