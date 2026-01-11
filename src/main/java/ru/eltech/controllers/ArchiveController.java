@@ -2,7 +2,7 @@ package ru.eltech.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.eltech.dto.ArchiveResidentDto;
+import ru.eltech.dto.residents.ArchiveResidentDto;
 import ru.eltech.entity.Archive;
 import ru.eltech.services.ArchiveService;
 

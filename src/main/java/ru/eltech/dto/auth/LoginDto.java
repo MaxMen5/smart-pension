@@ -1,4 +1,4 @@
-package ru.eltech.dto;
+package ru.eltech.dto.auth;
 
 public record LoginDto(
         String login,

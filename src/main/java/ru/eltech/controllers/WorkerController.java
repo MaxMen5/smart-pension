@@ -2,7 +2,7 @@ package ru.eltech.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.eltech.dto.WorkerDto;
+import ru.eltech.dto.workers.WorkerDto;
 import ru.eltech.services.WorkerService;
 
 import java.util.List;

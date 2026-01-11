@@ -1,4 +1,4 @@
-package ru.eltech.dto;
+package ru.eltech.dto.rooms;
 
 public record RoomDto (
      String roomNumber,

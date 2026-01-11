@@ -1,4 +1,4 @@
-package ru.eltech.dto;
+package ru.eltech.dto.users;
 
 public record UserDto (
         Long id,

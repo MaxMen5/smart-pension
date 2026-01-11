@@ -2,9 +2,9 @@ package ru.eltech.services;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import ru.eltech.dto.CreateResidentDto;
-import ru.eltech.dto.ResidentDto;
-import ru.eltech.dto.ResidentSmallDto;
+import ru.eltech.dto.residents.CreateResidentDto;
+import ru.eltech.dto.residents.ResidentDto;
+import ru.eltech.dto.residents.ResidentSmallDto;
 import ru.eltech.entity.Resident;
 import ru.eltech.exception.MyException;
 import ru.eltech.repositories.ResidentRepository;

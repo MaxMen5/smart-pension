@@ -1,4 +1,6 @@
-package ru.eltech.dto;
+package ru.eltech.dto.tasks;
+
+import ru.eltech.dto.workers.WorkerInRoomDto;
 
 import java.util.List;
 

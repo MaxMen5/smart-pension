@@ -3,7 +3,7 @@ package ru.eltech.services;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.eltech.dto.AuthDto;
+import ru.eltech.dto.auth.AuthDto;
 import ru.eltech.repositories.UserRepository;
 import ru.eltech.entity.User;
 import ru.eltech.security.JwtUtil;

@@ -2,9 +2,9 @@ package ru.eltech.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.eltech.dto.CreateResidentDto;
-import ru.eltech.dto.ResidentDto;
-import ru.eltech.dto.ResidentSmallDto;
+import ru.eltech.dto.residents.CreateResidentDto;
+import ru.eltech.dto.residents.ResidentDto;
+import ru.eltech.dto.residents.ResidentSmallDto;
 import ru.eltech.services.ResidentService;
 
 import java.util.List;
