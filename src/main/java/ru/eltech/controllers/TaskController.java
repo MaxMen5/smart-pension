@@ -5,10 +5,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.eltech.dto.CompleteTaskDto;
-import ru.eltech.dto.CreateTaskDto;
-import ru.eltech.dto.DailyRoomTasksDto;
-import ru.eltech.dto.TaskStatusDto;
+import ru.eltech.dto.tasks.CompleteTaskDto;
+import ru.eltech.dto.tasks.CreateTaskDto;
+import ru.eltech.dto.tasks.DailyRoomTasksDto;
+import ru.eltech.dto.tasks.TaskStatusDto;
 import ru.eltech.services.TaskService;
 import java.time.LocalDate;
 
@@ -18,6 +18,12 @@ import java.time.LocalDate;
 public class TaskController {
 
     private final TaskService taskService;
+
+    @GetMapping("/generate")
+    public ResponseEntity<Void> generateTasks() {
+        taskService.generateTasks();
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/find_all_tasks")
     public ResponseEntity<DailyRoomTasksDto> getDailyTasks(

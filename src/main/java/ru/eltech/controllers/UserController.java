@@ -2,8 +2,8 @@ package ru.eltech.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.eltech.dto.CreateUserDto;
-import ru.eltech.dto.UserDto;
+import ru.eltech.dto.users.CreateUserDto;
+import ru.eltech.dto.users.UserDto;
 import ru.eltech.services.UserService;
 
 import java.util.List;

@@ -3,8 +3,6 @@ package ru.eltech.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import ru.eltech.dto.ResidentDto;
-import ru.eltech.dto.ResidentSmallDto;
 import ru.eltech.entity.Resident;
 
 import java.util.List;

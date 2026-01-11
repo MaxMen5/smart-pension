@@ -1,4 +1,4 @@
-package ru.eltech.dto;
+package ru.eltech.dto.workers;
 
 public record WorkerInRoomDto(
         Long id,

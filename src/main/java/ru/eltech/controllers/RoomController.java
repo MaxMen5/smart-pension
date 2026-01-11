@@ -2,7 +2,7 @@ package ru.eltech.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.eltech.dto.RoomDto;
+import ru.eltech.dto.rooms.RoomDto;
 import ru.eltech.entity.Room;
 import ru.eltech.services.RoomService;
 

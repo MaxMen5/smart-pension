@@ -2,7 +2,7 @@ package ru.eltech.services;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import ru.eltech.dto.ArchiveResidentDto;
+import ru.eltech.dto.residents.ArchiveResidentDto;
 import ru.eltech.entity.Archive;
 import ru.eltech.entity.Resident;
 import ru.eltech.entity.Room;
