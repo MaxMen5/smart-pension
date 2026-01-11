@@ -55,7 +55,6 @@ public class UserService {
         user.setPassUser(hashedPassword);
 
         user.setRoleUser(userRequest.roleUser());
-        user.setIsActive(false);
 
         userRepository.save(user);
 

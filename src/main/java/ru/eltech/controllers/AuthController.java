@@ -1,6 +1,5 @@
 package ru.eltech.controllers;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.eltech.dto.auth.AuthDto;
 import ru.eltech.dto.auth.LoginDto;
@@ -16,11 +15,5 @@ public class AuthController {
     @PostMapping("/login")
     public AuthDto login(@RequestBody LoginDto loginDto) {
         return authService.authenticateUser(loginDto.login(), loginDto.password());
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String authHeader) {
-        authService.logoutUserByToken(authHeader);
-        return ResponseEntity.noContent().build();
     }
 }

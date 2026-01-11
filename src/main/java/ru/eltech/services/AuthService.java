@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.eltech.dto.auth.AuthDto;
+import ru.eltech.exception.MyException;
 import ru.eltech.repositories.UserRepository;
 import ru.eltech.entity.User;
 import ru.eltech.security.JwtUtil;
@@ -28,37 +29,13 @@ public class AuthService {
     @Transactional
     public AuthDto authenticateUser(String login, String password) {
         Optional<User> userOptional = userRepository.findByLogin(login);
-
-        if (userOptional.isEmpty()) {
-            return new AuthDto(false, "Пользователь не найден", null, null, null);
-        }
+        if (userOptional.isEmpty()) throw new MyException("Пользователь не найден!");
 
         User user = userOptional.get();
-
-        if (!passwordEncoder.matches(password, user.getPassUser())) {
-            return new AuthDto(false, "Неверный пароль", null, null, null);
-        }
-
-        user.setIsActive(true);
-        userRepository.save(user);
+        if (!passwordEncoder.matches(password, user.getPassUser())) throw new MyException("Неверный пароль");
 
         String token = jwtUtil.generateToken(login);
 
-        return new AuthDto(true, "Авторизация успешна",
-                user.getRoleUser(), user.getLogin(), token);
-    }
-
-    @Transactional
-    public void logoutUserByToken(String authHeader) {
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            String username = jwtUtil.extractUsername(token);
-
-            Optional<User> userOptional = userRepository.findByLogin(username);
-            userOptional.ifPresent(user -> {
-                user.setIsActive(false);
-                userRepository.save(user);
-            });
-        }
+        return new AuthDto(user.getRoleUser(), token);
     }
 }

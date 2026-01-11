@@ -27,7 +27,4 @@ public class User {
 
     @Column(name = "role_user", nullable = false)
     private String roleUser;
-
-    @Column(name = "is_active")
-    private Boolean isActive;
 }
