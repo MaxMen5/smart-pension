@@ -37,9 +37,9 @@ public class TaskService {
         for (LocalDate date = today; !date.isAfter(endDate); date = date.plusDays(1)) {
             if (taskRepository.countByTaskDate(date) != 0) continue; // если нет задач на день ни одной!
             List<Room> allRooms = roomRepository.findAll();
-            List<TasksConfig.TaskTemplate> templates = tasksConfig.getTemplates();
+            List<TasksConfig.DailyTask> templates = tasksConfig.getDaily();
             for (Room room : allRooms) {
-                for (TasksConfig.TaskTemplate template : templates) {
+                for (TasksConfig.DailyTask template : templates) {
                     Task task = new Task();
                     task.setTitle(template.getTitle());
                     task.setDescription(template.getDescription());

@@ -7,13 +7,13 @@ import java.util.List;
 
 @Component
 @Data
-@ConfigurationProperties(prefix = "tasks.daily")
+@ConfigurationProperties(prefix = "tasks")
 public class TasksConfig {
     private int daysAhead = 7;
-    private List<TaskTemplate> templates;
+    private List<DailyTask> daily;
 
     @Data
-    public static class TaskTemplate {
+    public static class DailyTask {
         private String title;
         private String description;
     }
